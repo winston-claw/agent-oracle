@@ -36,3 +36,12 @@ convex/_generated/
 
 # Logs
 *.log
+
+# Vercel
+.vercel/
+
+# TypeScript
+*.tsbuildinfo
+
+# Misc
+*.tgz
