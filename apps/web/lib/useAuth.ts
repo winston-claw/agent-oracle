@@ -1,12 +1,23 @@
 'use client';
 
-import { signIn, signUp } from '@db/convex/auth';
-import { useMutation } from 'convex/react';
-
+// Demo auth hook - replace with actual Convex auth integration
 export function useAuth() {
-  const login = useMutation(signIn);
-  const logout = useMutation(signOut);
-  const createAccount = useMutation(signUp);
+  const login = async (email: string, password: string) => {
+    // TODO: Implement actual auth with Convex
+    console.log('Login:', email);
+    return { success: true };
+  };
+
+  const logout = async () => {
+    // TODO: Implement logout
+    console.log('Logout');
+  };
+
+  const createAccount = async (name: string, email: string, password: string) => {
+    // TODO: Implement signup
+    console.log('Signup:', name, email);
+    return { success: true };
+  };
 
   return {
     login,
