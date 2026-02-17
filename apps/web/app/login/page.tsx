@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useMutation } from '@/convex/client';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -12,10 +11,6 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const login = useMutation({ 
-    path: ['auth', 'login'],
-  } as any);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -23,7 +18,7 @@ export default function LoginPage() {
 
     try {
       // For demo, just redirect to dashboard
-      // In production, validate credentials
+      // In production, validate credentials with Convex
       router.push('/dashboard');
     } catch (err: any) {
       setError(err.message || 'Login failed');
