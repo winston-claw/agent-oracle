@@ -3,6 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "cd apps/web && ./node_modules/.bin/next build"
+    "build": "next build"
   }
 }
