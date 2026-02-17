@@ -1,24 +1,22 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '../../lib/auth';
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, logout, loading } = useAuth();
 
   useEffect(() => {
-    // Check if user is authenticated
-    // For demo, we'll show a logged-in state
-    setUser({ name: 'Demo User', email: 'demo@example.com' });
-    setLoading(false);
-  }, []);
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
 
-  const handleLogout = () => {
-    // Clear auth state
-    router.push('/login');
+  const handleLogout = async () => {
+    await logout();
   };
 
   if (loading) {
@@ -32,6 +30,10 @@ export default function DashboardPage() {
         Loading...
       </div>
     );
+  }
+
+  if (!user) {
+    return null;
   }
 
   return (
@@ -50,7 +52,7 @@ export default function DashboardPage() {
         </h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <span style={{ fontSize: '0.875rem', color: '#64748b' }}>
-            {user?.email}
+            {user.email}
           </span>
           <button
             onClick={handleLogout}
@@ -74,7 +76,7 @@ export default function DashboardPage() {
         {/* Welcome */}
         <div style={{ marginBottom: '2rem' }}>
           <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
-            Welcome back{user?.name ? `, ${user.name}` : ''}! 👋
+            Welcome back{user.name ? `, ${user.name}` : ''}! 👋
           </h2>
           <p style={{ color: '#64748b' }}>
             This is your authenticated dashboard. Only logged-in users can see this page.

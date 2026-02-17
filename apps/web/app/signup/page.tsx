@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '../../lib/auth';
 
 export default function SignupPage() {
   const router = useRouter();
+  const { signup } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,9 +20,7 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      // For demo, just redirect to dashboard
-      // In production, call signup mutation
-      router.push('/dashboard');
+      await signup(name, email, password);
     } catch (err: any) {
       setError(err.message || 'Signup failed');
     } finally {

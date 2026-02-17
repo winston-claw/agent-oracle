@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function Home() {
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -66,12 +67,12 @@ export default function Home() {
           Next.js 14 + Tailwind + Convex + Better Auth
         </p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-          <button style={{ padding: '0.75rem 1.5rem', background: '#2563eb', color: 'white', borderRadius: '0.5rem', border: 'none', cursor: 'pointer' }}>
+          <Link href="/signup" style={{ padding: '0.75rem 1.5rem', background: '#2563eb', color: 'white', borderRadius: '0.5rem', border: 'none', cursor: 'pointer', textDecoration: 'none', display: 'inline-block' }}>
             Get Started
-          </button>
-          <button style={{ padding: '0.75rem 1.5rem', background: 'white', color: '#2563eb', borderRadius: '0.5rem', border: '1px solid #2563eb', cursor: 'pointer' }}>
-            Learn More
-          </button>
+          </Link>
+          <Link href="/login" style={{ padding: '0.75rem 1.5rem', background: 'white', color: '#2563eb', borderRadius: '0.5rem', border: '1px solid #2563eb', cursor: 'pointer', textDecoration: 'none', display: 'inline-block' }}>
+            Log In
+          </Link>
         </div>
       </section>
 

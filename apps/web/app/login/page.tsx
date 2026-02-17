@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '../../lib/auth';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -17,9 +19,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // For demo, just redirect to dashboard
-      // In production, validate credentials with Convex
-      router.push('/dashboard');
+      await login(email, password);
     } catch (err: any) {
       setError(err.message || 'Login failed');
     } finally {
