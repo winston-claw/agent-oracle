@@ -5,6 +5,7 @@ export default defineSchema({
   users: defineTable({
     name: v.string(),
     email: v.string(),
+    password: v.string(), // In production, hash this!
     createdAt: v.number(),
     updatedAt: v.number(),
   })
