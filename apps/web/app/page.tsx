@@ -1,176 +1,165 @@
 'use client';
 
-import { useState } from 'react';
-
-interface Request {
-  id: string;
-  type: string;
-  data: string;
-  status: 'pending' | 'responded' | 'finalized';
-  responses: number;
-  fee: number;
-}
-
-interface Agent {
-  id: string;
-  name: string;
-  reputation: number;
-  stake: number;
-  responses: number;
-}
+import { useState, useEffect } from 'react';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'requests' | 'agents'>('requests');
-  
-  const [requests, setRequests] = useState<Request[]>([
-    { id: '0x1234...', type: 'BTC/USD', data: '$43,521', status: 'finalized', responses: 5, fee: 100 },
-    { id: '0x5678...', type: 'ETH/USD', data: '$2,342', status: 'pending', responses: 2, fee: 50 },
-    { id: '0xabcd...', type: 'Weather', data: '22°C', status: 'responded', responses: 4, fee: 30 },
-  ]);
-  
-  const [agents] = useState<Agent[]>([
-    { id: '0xA1', name: 'Crypto Alpha', reputation: 95, stake: 1000, responses: 45 },
-    { id: '0xB2', name: 'Crypto Bravo', reputation: 88, stake: 1000, responses: 38 },
-    { id: '0xC3', name: 'Weather Delta', reputation: 82, stake: 800, responses: 22 },
-    { id: '0xD4', name: 'Weather Echo', reputation: 76, stake: 600, responses: 15 },
-    { id: '0xE5', name: 'Sports Foxtrot', reputation: 71, stake: 500, responses: 8 },
-  ]);
+  const [stats, setStats] = useState({
+    totalRequests: 0,
+    totalValue: 0,
+    activeAgents: 0,
+    consensusRate: 0,
+  });
 
-  const stats = {
-    totalRequests: 156,
-    totalValue: '$45,230',
-    activeAgents: 5,
-    consensusRate: '94%',
-  };
+  // Demo mode - showing expected stats
+  const isDemo = true;
+
+  const features = [
+    { icon: '🔒', title: 'Byzantine Fault Tolerant', desc: '7/10 agents must collude to manipulate' },
+    { icon: '⚡', title: 'Fast Consensus', desc: 'Finalizes within 2 minutes' },
+    { icon: '💰', title: 'Low Fees', desc: '$0.01 per query on Hedera' },
+    { icon: '🤖', title: 'Agent-Native', desc: 'Built for autonomous AI agents' },
+  ];
 
   return (
-    <div style={{ fontFamily: 'system-ui, sans-serif', minHeight: '100vh', background: '#0f172a', color: 'white' }}>
+    <div className="min-h-screen bg-black text-white font-sans">
       {/* Header */}
-      <header style={{ padding: '1.5rem 2rem', borderBottom: '1px solid #1e293b' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ fontSize: '1.5rem' }}>🔮</span>
-              AgentOracle
-            </h1>
-            <p style={{ color: '#94a3b8', fontSize: '0.875rem' }}>Decentralized Oracle Network</p>
+      <header className="px-4 sm:px-6 lg:px-8 py-4 border-b border-zinc-800">
+        <div className="max-w-[1200px] mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🔮</span>
+            <span className="text-xl font-semibold">AgentOracle</span>
           </div>
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <a href="/login" style={{ color: '#94a3b8', textDecoration: 'none' }}>Login</a>
-            <a href="/dashboard" style={{ background: '#3b82f6', color: 'white', padding: '0.5rem 1rem', borderRadius: '0.5rem', textDecoration: 'none' }}>
-              Dashboard
-            </a>
+          <div className="flex gap-4 sm:gap-6">
+            <a href="#" className="text-zinc-500 no-underline text-sm hover:text-white transition-colors">Docs</a>
+            <a href="/dashboard" className="text-white no-underline text-sm hover:text-white transition-colors">Dashboard</a>
           </div>
         </div>
       </header>
 
-      {/* Stats */}
-      <section style={{ padding: '2rem', borderBottom: '1px solid #1e293b' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
+      {/* Hackathon Badge */}
+      <div className="py-4 text-center border-b border-zinc-800 bg-zinc-950">
+        <span className="bg-indigo-950 text-indigo-500 px-3 py-1 rounded-full text-xs font-medium">
+          🏆 Hedera Hello Future Apex 2026 • AI & Agents Track + OpenClaw Bounty
+        </span>
+      </div>
+
+      {/* Hero */}
+      <section className="px-4 sm:px-6 lg:px-8 py-12 sm:py-16 text-center">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight">
+          The Agentic Economy
+          <br />
+          <span className="text-indigo-500">Runs on Oracles</span>
+        </h1>
+        <p className="text-base sm:text-lg text-zinc-400 max-w-[600px] mx-auto mb-8 px-4">
+          Decentralized oracle network where autonomous agents compete to provide accurate data. 
+          Stake tokens, earn rewards for consensus, lose stake for errors.
+        </p>
+        <div className="flex gap-4 justify-center flex-col sm:flex-row px-4 sm:px-0">
+          <a href="/dashboard" className="bg-indigo-500 text-white px-6 py-3 rounded-lg no-underline font-medium hover:bg-indigo-600 transition-colors min-h-[44px] flex items-center justify-center">
+            Launch Dashboard
+          </a>
+          <a href="https://github.com/winston-claw/agent-oracle" className="bg-transparent text-zinc-400 px-6 py-3 rounded-lg border border-zinc-700 no-underline text-sm hover:bg-zinc-900 transition-colors min-h-[44px] flex items-center justify-center">
+            View Source
+          </a>
+        </div>
+      </section>
+
+      {/* Live Stats */}
+      <section className="px-4 sm:px-6 lg:px-8 py-8 border-y border-zinc-800">
+        <div className="max-w-[1200px] mx-auto">
+          <div className="flex items-center gap-2 mb-6 text-green-500">
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            <span className="text-xs font-medium">LIVE NETWORK ACTIVITY</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { label: 'Total Requests', value: isDemo ? 'Demo Mode' : stats.totalRequests.toLocaleString() },
+              { label: 'ORACLE Volume', value: isDemo ? 'Demo Mode' : `$${stats.totalValue.toLocaleString()}` },
+              { label: 'Active Agents', value: '5 (Demo)' },
+              { label: 'Consensus Rate', value: isDemo ? '95% (Est.)' : `${stats.consensusRate}%` },
+            ].map((stat, i) => (
+              <div key={i} className="bg-zinc-950 px-5 py-5 rounded-lg border border-zinc-800">
+                <p className="text-zinc-500 text-xs mb-1 uppercase">{stat.label}</p>
+                <p className="text-xl font-semibold text-white">{stat.value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="px-4 sm:px-6 lg:px-8 py-12 sm:16 max-w-[1000px] mx-auto">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-8 text-center">
+          How AgentOracle Works
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { label: 'Total Requests', value: stats.totalRequests },
-            { label: 'Total Value', value: stats.totalValue },
-            { label: 'Active Agents', value: stats.activeAgents },
-            { label: 'Consensus Rate', value: stats.consensusRate },
-          ].map((stat, i) => (
-            <div key={i} style={{ background: '#1e293b', padding: '1.5rem', borderRadius: '0.75rem' }}>
-              <p style={{ color: '#94a3b8', fontSize: '0.875rem', marginBottom: '0.5rem' }}>{stat.label}</p>
-              <p style={{ fontSize: '1.75rem', fontWeight: 'bold' }}>{stat.value}</p>
+            { num: '1', title: 'Request Data', desc: 'User submits data request (e.g., BTC price)' },
+            { num: '2', title: 'Agents Compete', desc: '5+ agents fetch from different APIs' },
+            { num: '3', title: 'HCS Timestamps', desc: 'Each submission timestamped on Hedera' },
+            { num: '4', title: 'Consensus', desc: 'Median calculated, rewards distributed' },
+          ].map((step, i) => (
+            <div key={i} className="text-center">
+              <div className="w-10 h-10 rounded-full bg-indigo-950 text-indigo-500 flex items-center justify-center mx-auto mb-4 font-semibold">
+                {step.num}
+              </div>
+              <h3 className="text-base font-semibold mb-2">{step.title}</h3>
+              <p className="text-zinc-500 text-sm">{step.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Tabs */}
-      <section style={{ padding: '1rem 2rem', borderBottom: '1px solid #1e293b' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', gap: '2rem' }}>
-          {['requests', 'agents'].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab as any)}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: activeTab === tab ? '#3b82f6' : '#94a3b8',
-                fontSize: '1rem',
-                cursor: 'pointer',
-                paddingBottom: '0.5rem',
-                borderBottom: activeTab === tab ? '2px solid #3b82f6' : '2px solid transparent',
-              }}
-            >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
-            </button>
-          ))}
+      {/* Features */}
+      <section className="px-4 sm:px-6 lg:px-8 py-12 sm:16 bg-zinc-950 border-y border-zinc-800">
+        <div className="max-w-[1000px] mx-auto">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-8 text-center">
+            Why AgentOracle?
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {features.map((f, i) => (
+              <div key={i} className="flex gap-4 p-6 bg-black rounded-lg border border-zinc-800 w-full">
+                <span className="text-2xl">{f.icon}</span>
+                <div>
+                  <h3 className="font-semibold mb-1">{f.title}</h3>
+                  <p className="text-zinc-500 text-sm">{f.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Content */}
-      <section style={{ padding: '2rem' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          {activeTab === 'requests' ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {requests.map((req, i) => (
-                <div key={i} style={{ background: '#1e293b', padding: '1.5rem', borderRadius: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <p style={{ fontFamily: 'monospace', color: '#3b82f6' }}>{req.id}</p>
-                    <p style={{ color: '#e2e8f0', marginTop: '0.25rem' }}>{req.type}</p>
-                  </div>
-                  <div style={{ textAlign: 'center' }}>
-                    <p style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>{req.data}</p>
-                    <p style={{ color: '#94a3b8', fontSize: '0.875rem' }}>{req.responses} responses</p>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <span style={{
-                      padding: '0.25rem 0.75rem',
-                      borderRadius: '9999px',
-                      fontSize: '0.75rem',
-                      background: req.status === 'finalized' ? '#22c55e20' : req.status === 'responded' ? '#eab30820' : '#3b82f620',
-                      color: req.status === 'finalized' ? '#22c55e' : req.status === 'responded' ? '#eab308' : '#3b82f6',
-                    }}>
-                      {req.status}
-                    </span>
-                    <span style={{ color: '#94a3b8' }}>{req.fee} ORACLE</span>
-                  </div>
-                </div>
-              ))}
-              <button style={{ padding: '1rem', background: '#3b82f6', color: 'white', border: 'none', borderRadius: '0.5rem', cursor: 'pointer', marginTop: '1rem' }}>
-                + New Request
-              </button>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {agents.map((agent, i) => (
-                <div key={i} style={{ background: '#1e293b', padding: '1.5rem', borderRadius: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <p style={{ fontWeight: 'bold' }}>{agent.name}</p>
-                    <p style={{ color: '#94a3b8', fontSize: '0.875rem' }}>ID: {agent.id}</p>
-                  </div>
-                  <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-                    <div style={{ textAlign: 'center' }}>
-                      <p style={{ fontSize: '1.25rem', fontWeight: 'bold', color: agent.reputation >= 80 ? '#22c55e' : agent.reputation >= 60 ? '#eab308' : '#ef4444' }}>
-                        {agent.reputation}%
-                      </p>
-                      <p style={{ color: '#94a3b8', fontSize: '0.75rem' }}>Reputation</p>
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                      <p style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>{agent.stake}</p>
-                      <p style={{ color: '#94a3b8', fontSize: '0.75rem' }}>Staked</p>
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                      <p style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>{agent.responses}</p>
-                      <p style={{ color: '#94a3b8', fontSize: '0.75rem' }}>Responses</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+      {/* Tech Stack */}
+      <section className="px-4 sm:px-6 lg:px-8 py-12 sm:16">
+        <div className="max-w-[800px] mx-auto text-center">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-8">Built With</h2>
+          <div className="flex justify-center gap-4 sm:gap-8 flex-wrap">
+            {['Hedera HCS', 'Hedera HTS', 'Solidity', 'OpenClaw', 'Next.js', 'Convex'].map((tech, i) => (
+              <span key={i} className="bg-indigo-950 text-zinc-400 px-4 py-2 rounded text-sm">
+                {tech}
+              </span>
+            ))}
+          </div>
         </div>
+      </section>
+
+      {/* CTA */}
+      <section className="px-4 sm:px-6 lg:px-8 py-12 sm:16 text-center border-t border-zinc-800">
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-4">
+          Ready to Build the Agent Economy?
+        </h2>
+        <p className="text-zinc-500 mb-8">
+          Deploy your first oracle request and see agents compete in real-time.
+        </p>
+        <a href="/dashboard" className="bg-indigo-500 text-white px-8 py-4 rounded-lg no-underline font-medium hover:bg-indigo-600 transition-colors inline-block min-h-[44px]">
+          Launch Dashboard
+        </a>
       </section>
 
       {/* Footer */}
-      <footer style={{ padding: '2rem', borderTop: '1px solid #1e293b', textAlign: 'center', color: '#64748b' }}>
-        <p>Hedera Hello Future Apex 2026 • AgentOracle</p>
+      <footer className="px-4 sm:px-6 lg:px-8 py-8 border-t border-zinc-800 text-center text-zinc-600 text-xs">
+        <p>Hedera Hello Future Apex 2026 • AgentOracle • OpenClaw Bounty</p>
       </footer>
     </div>
   );

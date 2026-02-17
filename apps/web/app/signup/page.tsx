@@ -29,41 +29,21 @@ export default function SignupPage() {
   };
 
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'center',
-      background: '#f8fafc' 
-    }}>
-      <div style={{ 
-        width: '100%', 
-        maxWidth: '400px', 
-        padding: '2rem',
-        background: 'white',
-        borderRadius: '1rem',
-        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-      }}>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem', textAlign: 'center' }}>
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-[400px] p-6 sm:p-8 bg-white rounded-2xl shadow-lg">
+        <h1 className="text-xl sm:text-2xl font-bold mb-6 text-center">
           Create Account
         </h1>
         
         {error && (
-          <div style={{ 
-            padding: '0.75rem', 
-            background: '#fee2e2', 
-            color: '#dc2626',
-            borderRadius: '0.5rem',
-            marginBottom: '1rem',
-            fontSize: '0.875rem'
-          }}>
+          <div className="p-3 bg-red-100 text-red-600 rounded-lg mb-4 text-sm">
             {error}
           </div>
         )}
         
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500' }}>
+          <div className="mb-4">
+            <label className="block mb-2 text-sm font-medium">
               Name
             </label>
             <input
@@ -71,19 +51,13 @@ export default function SignupPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              style={{ 
-                width: '100%', 
-                padding: '0.75rem',
-                border: '1px solid #e2e8f0',
-                borderRadius: '0.5rem',
-                fontSize: '1rem'
-              }}
+              className="w-full p-3 border border-slate-200 rounded-lg text-base"
               placeholder="John Doe"
             />
           </div>
           
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500' }}>
+          <div className="mb-4">
+            <label className="block mb-2 text-sm font-medium">
               Email
             </label>
             <input
@@ -91,19 +65,13 @@ export default function SignupPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              style={{ 
-                width: '100%', 
-                padding: '0.75rem',
-                border: '1px solid #e2e8f0',
-                borderRadius: '0.5rem',
-                fontSize: '1rem'
-              }}
+              className="w-full p-3 border border-slate-200 rounded-lg text-base"
               placeholder="you@example.com"
             />
           </div>
           
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500' }}>
+          <div className="mb-6">
+            <label className="block mb-2 text-sm font-medium">
               Password
             </label>
             <input
@@ -112,16 +80,10 @@ export default function SignupPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
-              style={{ 
-                width: '100%', 
-                padding: '0.75rem',
-                border: '1px solid #e2e8f0',
-                borderRadius: '0.5rem',
-                fontSize: '1rem'
-              }}
+              className="w-full p-3 border border-slate-200 rounded-lg text-base"
               placeholder="••••••••"
             />
-            <p style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
+            <p className="text-xs text-slate-500 mt-1">
               Must be at least 6 characters
             </p>
           </div>
@@ -129,25 +91,15 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={loading}
-            style={{ 
-              width: '100%', 
-              padding: '0.75rem',
-              background: loading ? '#93c5fd' : '#2563eb',
-              color: 'white',
-              border: 'none',
-              borderRadius: '0.5rem',
-              fontSize: '1rem',
-              fontWeight: '500',
-              cursor: loading ? 'not-allowed' : 'pointer'
-            }}
+            className="w-full p-3 bg-blue-600 text-white border-none rounded-lg text-base font-medium cursor-pointer hover:bg-blue-700 transition-colors disabled:bg-blue-300 disabled:cursor-not-allowed min-h-[44px]"
           >
             {loading ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
         
-        <p style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.875rem', color: '#64748b' }}>
+        <p className="mt-6 text-center text-sm text-slate-500">
           Already have an account?{' '}
-          <Link href="/login" style={{ color: '#2563eb', textDecoration: 'none' }}>
+          <Link href="/login" className="text-blue-600 no-underline hover:underline">
             Sign in
           </Link>
         </p>
