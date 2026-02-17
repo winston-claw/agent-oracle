@@ -6,8 +6,8 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Hackathon Template',
-  description: 'A complete Next.js 14 hackathon template with authentication',
+  title: 'AgentOracle',
+  description: 'Decentralized Oracle Network - Hedera Hello Future Apex 2026',
 };
 
 export default function RootLayout({

@@ -1,97 +1,98 @@
-# Hackathon Template
+# AgentOracle
 
-A production-ready hackathon starter template with Next.js 14, Convex (auth + database), and Tailwind CSS.
+**Hedera Hello Future Apex 2026** - AI & Agents Track + OpenClaw Bounty
+
+A decentralized oracle network where autonomous OpenClaw agents compete to provide accurate off-chain data to smart contracts. Agents stake tokens, earn rewards for consensus accuracy, and lose stake for errors.
 
 ## Features
 
-- **Next.js 14** - App Router, TypeScript, Server Components
-- **Convex** - Real-time database + auth (signup, login, sessions)
-- **Tailwind CSS** - Utility-first styling
-- **Vercel** - Production-ready deployment
+- **Hedera Integration**: HCS (Consensus Service), HTS (Token Service), Smart Contracts
+- **Multi-Agent Consensus**: 5+ autonomous agents competing to provide accurate data
+- **Economic Incentives**: Staking, rewards for accuracy, slashing for errors
+- **Byzantine Fault Tolerance**: 7/10 agents must collude to manipulate
 
-## Quick Start
+## Tech Stack
+
+- **Smart Contracts**: Solidity on Hedera EVM
+- **Agents**: OpenClaw (Node.js + TypeScript)
+- **Frontend**: Next.js 14 + Tailwind + Convex
+- **Database**: Convex (auth + user data)
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 20+
+- npm or yarn
+- Hedera Testnet account
+- MetaMask or other wallet
+
+### Installation
 
 ```bash
 # Clone the repo
-git clone https://github.com/winston-claw/hackathon-template.git
-cd hackathon-template
+git clone https://github.com/winston-claw/agent-oracle.git
+cd agent-oracle
 
 # Install dependencies
 npm install
 
 # Set up Convex (dev)
 npx convex dev
-
-# Run locally
-npm run dev
 ```
-
-## Convex Setup
-
-1. Run `npx convex dev` and authenticate with your browser
-2. The Convex backend deploys to a dev URL automatically
-3. Copy your Convex deployment URL
 
 ### Environment Variables
 
-For local development, create `.env.local`:
+Create `.env.local`:
 
 ```
-NEXT_PUBLIC_CONVEX_URL=https://your-deployment.convex.dev
+NEXT_PUBLIC_CONVEX_URL=https://your-deployment.convex.cloud
 ```
-
-For Vercel, add `NEXT_PUBLIC_CONVEX_URL` in your project settings.
 
 ## Project Structure
 
 ```
-hackathon-template/
-├── apps/web/              # Next.js app
-│   ├── app/               # App Router pages
-│   │   ├── login/         # Login page
-│   │   ├── signup/       # Signup page
-│   │   └── dashboard/    # Protected dashboard
-│   ├── lib/               # Utilities (auth, convex client)
-│   └── convex/            # Generated Convex types
-├── packages/db/           # Convex backend code
+agent-oracle/
+├── contracts/          # Solidity smart contracts
+│   └── src/
+├── agents/             # OpenClaw agents
+│   └── src/
+├── apps/web/           # Next.js frontend
+│   ├── app/
+│   ├── lib/
 │   └── convex/
-│       ├── schema.ts      # Database schema
-│       └── auth.ts        # Auth mutations
-└── convex.json            # Convex config
+├── packages/db/        # Convex backend
+│   └── convex/
+└── README.md
 ```
 
-## Authentication
+## Architecture
 
-The template includes full auth:
+1. **Smart Contracts**: OracleHub (request coordination), AgentRegistry (stake management)
+2. **HCS**: Tamper-proof timestamps for all agent submissions
+3. **HTS**: ORACLE token for staking and rewards
+4. **Agents**: Autonomous OpenClaw agents fetching external data
+5. **Consensus**: Median/mode calculation, reward distribution, slashing
 
-- `/signup` - Create account
-- `/login` - Sign in
-- `/dashboard` - Protected route (redirects if not logged in)
+## Demo Flow
 
-Auth is handled via Convex mutations with session tokens stored in localStorage.
+1. User submits data request (e.g., "BTC price?")
+2. Multiple agents compete to fetch and submit data
+3. HCS timestamps each submission
+4. Consensus calculated (median for numeric, mode for categorical)
+5. Correct agents earn rewards, incorrect agents lose stake
 
-## Deployment
+## Links
 
-### Vercel (Recommended)
+- **Live Demo**: https://agent-oracle.vercel.app
+- **GitHub**: https://github.com/winston-claw/agent-oracle
+- **Convex**: https://original-peccary-712.convex.cloud
 
-1. Import the repo on Vercel
-2. Add `NEXT_PUBLIC_CONVEX_URL` env var
-3. Deploy!
+## Hackathon Details
 
-### Convex
-
-Deploy the backend:
-
-```bash
-npx convex deploy
-```
-
-## Tech Stack
-
-- [Next.js 14](https://nextjs.org/)
-- [Convex](https://convex.dev/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [TypeScript](https://www.typescriptlang.org/)
+- **Deadline**: March 23, 2026
+- **Tracks**: AI & Agents (Main: $40k) + OpenClaw Bounty ($8k)
+- **Timeline**: 5 weeks
 
 ## License
 
