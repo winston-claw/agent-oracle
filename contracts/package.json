@@ -1,0 +1,20 @@
+{
+  "name": "agent-oracle-contracts",
+  "version": "1.0.0",
+  "description": "Smart contracts for AgentOracle - Hedera oracle network",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:testnet": "hardhat run scripts/deploy.ts --network hedera",
+    "deploy:local": "hardhat run scripts/deploy.ts --network hederaLocal"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@openzeppelin/contracts": "^5.0.0",
+    "@openzeppelin/hardhat-upgrades": "^3.0.0",
+    "hardhat": "^2.19.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.0"
+  }
+}
