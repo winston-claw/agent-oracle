@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /**
@@ -195,7 +195,7 @@ contract OracleHub is Ownable, ReentrancyGuard {
     /**
      * @dev Calculate median for numeric data
      */
-    function _calculateNumericConsensus(Response[] storage responses) internal pure returns (bytes memory) {
+    function _calculateNumericConsensus(Response[] memory responses) internal view returns (bytes memory) {
         uint256 n = responses.length;
         uint256[] memory values = new uint256[](n);
         
@@ -213,7 +213,7 @@ contract OracleHub is Ownable, ReentrancyGuard {
     /**
      * @dev Calculate mode for categorical data
      */
-    function _calculateModeConsensus(Response[] storage responses) internal pure returns (bytes memory) {
+    function _calculateModeConsensus(Response[] memory responses) internal view returns (bytes memory) {
         // For simplicity, just return the first response
         // In production, implement proper mode calculation
         return responses[0].data;
@@ -222,7 +222,7 @@ contract OracleHub is Ownable, ReentrancyGuard {
     /**
      * @dev Verify if response matches consensus
      */
-    function _verifyResponse(bytes memory data, bytes memory consensus) internal pure returns (bool) {
+    function _verifyResponse(bytes memory data, bytes memory consensus) internal view returns (bool) {
         // Simple comparison - in production use ±2% tolerance for numeric
         return keccak256(data) == keccak256(consensus);
     }
@@ -230,7 +230,7 @@ contract OracleHub is Ownable, ReentrancyGuard {
     /**
      * @dev Quick sort for median calculation
      */
-    function _sort(uint256[] memory arr) internal pure {
+    function _sort(uint256[] memory arr) internal view {
         for (uint i = 0; i < arr.length; i++) {
             for (uint j = i + 1; j < arr.length; j++) {
                 if (arr[i] > arr[j]) {

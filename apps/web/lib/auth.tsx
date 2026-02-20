@@ -2,8 +2,6 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
-import { useMutation, useQuery } from 'convex/react';
-import { api } from '../convex/api';
 
 interface User {
   userId: string;
@@ -21,58 +19,88 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-function getToken(): string | null {
+const USERS_KEY = 'auth_users';
+const CURRENT_USER_KEY = 'auth_current_user';
+
+function generateId(): string {
+  return Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+}
+
+function getUsers(): Record<string, { user: User; password: string }> {
+  if (typeof window === 'undefined') return {};
+  const stored = localStorage.getItem(USERS_KEY);
+  return stored ? JSON.parse(stored) : {};
+}
+
+function saveUsers(users: Record<string, { user: User; password: string }>) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+
+function getCurrentUser(): User | null {
   if (typeof window === 'undefined') return null;
-  return localStorage.getItem('auth_token');
+  const stored = localStorage.getItem(CURRENT_USER_KEY);
+  return stored ? JSON.parse(stored) : null;
 }
 
-function setToken(token: string) {
-  localStorage.setItem('auth_token', token);
-}
-
-function removeToken() {
-  localStorage.removeItem('auth_token');
+function setCurrentUser(user: User | null) {
+  if (user) {
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+  } else {
+    localStorage.removeItem(CURRENT_USER_KEY);
+  }
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  
-  const loginMutation = useMutation(api.auth.login);
-  const signupMutation = useMutation(api.auth.signup);
-  const logoutMutation = useMutation(api.auth.logout);
 
   useEffect(() => {
-    const token = getToken();
-    if (token) {
-      // TODO: Validate token with me query
-      setLoading(false);
-    } else {
-      setLoading(false);
+    // Restore user from localStorage on mount
+    const storedUser = getCurrentUser();
+    if (storedUser) {
+      setUser(storedUser);
     }
+    setLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
-    const result = await loginMutation({ email, password });
-    setToken(result.token);
-    setUser({ userId: result.userId, name: result.name, email });
+    const users = getUsers();
+    const userRecord = users[email.toLowerCase()];
+    
+    if (!userRecord || userRecord.password !== password) {
+      throw new Error('Invalid email or password');
+    }
+    
+    setCurrentUser(userRecord.user);
+    setUser(userRecord.user);
     router.push('/dashboard');
   };
 
   const signup = async (name: string, email: string, password: string) => {
-    const result = await signupMutation({ name, email, password });
-    setToken(result.token);
-    setUser({ userId: result.userId, name: result.name, email });
+    const users = getUsers();
+    const normalizedEmail = email.toLowerCase();
+    
+    if (users[normalizedEmail]) {
+      throw new Error('User already exists');
+    }
+    
+    const newUser: User = {
+      userId: generateId(),
+      name,
+      email: normalizedEmail,
+    };
+    
+    users[normalizedEmail] = { user: newUser, password };
+    saveUsers(users);
+    
+    setCurrentUser(newUser);
+    setUser(newUser);
     router.push('/dashboard');
   };
 
   const logout = async () => {
-    const token = getToken();
-    if (token) {
-      await logoutMutation({ token });
-    }
-    removeToken();
+    setCurrentUser(null);
     setUser(null);
     router.push('/');
   };

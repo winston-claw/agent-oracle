@@ -19,6 +19,15 @@ export interface DataSource {
   type: 'rest' | 'ws';
 }
 
+// Deployed contract addresses on Hedera Testnet
+export const ORACLE_HUB_ADDRESS = "0x4C536b1cd6511481B9EcAa6EdE6448B073A6f6e2";
+export const AGENT_REGISTRY_ADDRESS = "0xC9ff8Dfc0f25b7857a77D2fB777f8C420C75e06F";
+export const ORACLE_TOKEN_ADDRESS = "0x1fda3ABe6c64386044ADe463468ab2c1edE484D0";
+
+// Hedera Testnet RPC
+export const HEDERA_RPC_URL = "https://testnet.hashio.io";
+export const CHAIN_ID = 296;
+
 // Pre-configured agents for demo
 export const AGENT_CONFIGS: AgentConfig[] = [
   {

@@ -9,9 +9,48 @@ export default function Home() {
     activeAgents: 0,
     consensusRate: 0,
   });
+  const [mounted, setMounted] = useState(false);
 
-  // Demo mode - showing expected stats
-  const isDemo = true;
+  useEffect(() => {
+    setMounted(true);
+    
+    // Fetch stats from API
+    fetch('/api/oracle/stats')
+      .then(res => res.json())
+      .then(data => {
+        if (data.totalRequests !== undefined) {
+          setStats({
+            totalRequests: data.totalRequests,
+            totalValue: data.totalValue,
+            activeAgents: data.activeAgents,
+            consensusRate: data.consensusRate,
+          });
+        }
+      })
+      .catch(console.error);
+
+    // Poll for updates
+    const interval = setInterval(() => {
+      fetch('/api/oracle/stats')
+        .then(res => res.json())
+        .then(data => {
+          if (data.totalRequests !== undefined) {
+            setStats({
+              totalRequests: data.totalRequests,
+              totalValue: data.totalValue,
+              activeAgents: data.activeAgents,
+              consensusRate: data.consensusRate,
+            });
+          }
+        })
+        .catch(console.error);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Don't show demo mode once we've loaded real data
+  const isDemo = !mounted || stats.totalRequests === 0;
 
   const features = [
     { icon: '🔒', title: 'Byzantine Fault Tolerant', desc: '7/10 agents must collude to manipulate' },
@@ -73,10 +112,10 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { label: 'Total Requests', value: isDemo ? 'Demo Mode' : stats.totalRequests.toLocaleString() },
-              { label: 'ORACLE Volume', value: isDemo ? 'Demo Mode' : `$${stats.totalValue.toLocaleString()}` },
-              { label: 'Active Agents', value: '5 (Demo)' },
-              { label: 'Consensus Rate', value: isDemo ? '95% (Est.)' : `${stats.consensusRate}%` },
+              { label: 'Total Requests', value: isDemo ? 'Loading...' : stats.totalRequests.toLocaleString() },
+              { label: 'ORACLE Volume', value: isDemo ? 'Loading...' : `$${stats.totalValue.toLocaleString()}` },
+              { label: 'Active Agents', value: stats.activeAgents || '5' },
+              { label: 'Consensus Rate', value: isDemo ? 'Loading...' : `${stats.consensusRate}%` },
             ].map((stat, i) => (
               <div key={i} className="bg-zinc-950 px-5 py-5 rounded-lg border border-zinc-800">
                 <p className="text-zinc-500 text-xs mb-1 uppercase">{stat.label}</p>
